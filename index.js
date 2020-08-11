@@ -45,6 +45,9 @@ function render() {
 }
 render();
 
+
+
+
 document.querySelector(".book-form").addEventListener("submit", (e) => {
   // prevent actual submit
   e.preventDefault();
@@ -53,17 +56,38 @@ document.querySelector(".book-form").addEventListener("submit", (e) => {
   const title = document.querySelector("#title").value;
   const author = document.querySelector("#author").value;
   const pages = document.querySelector("#pages").value;
-  const readStatus = document.querySelector('input[name="yes_no"]:checked')
-    .value;
+  const readStatus = document.querySelector('input[name="yes_no"]:checked').value;
   // prevent empty fields ...
 
+  let bookToInsert = "";
   if (title === "" || author === "" || pages === "0") {
     alert("Missing data");
+    bookToInsert = {
+      title: title,
+      author: author,
+      pages: pages,
+      readStatus: readStatus,
+    };
   } else {
-    const book = new Book(title, author, pages, readStatus);
-    myLibrary.push(book);
-    addNewBookUI(book);
-    clearFormFields();
+    bookToInsert = {
+      title: title,
+      author: author,
+      pages: pages,
+      readStatus: readStatus,
+    };
+    console.log(bookToInsert);
+
+    let bookExists = myLibrary.some((book) => book.title == bookToInsert.title);
+    console.log(bookExists);
+
+    if (bookExists == false) {
+      const book = new Book(title, author, pages, readStatus);
+      myLibrary.push(book);
+      addNewBookUI(book);
+      clearFormFields();
+    } else {
+      alert("It already exists");
+    }
   }
 });
 
