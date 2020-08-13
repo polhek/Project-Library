@@ -1,31 +1,32 @@
+// Local storage
+
+// get items from local storage, if not there, empty array... Array where all the books will be saved...
+let myLibrary = localStorage.getItem("library")
+  ? JSON.parse(localStorage.getItem("library"))
+  : [
+      // {
+      //   title: "Harry Potter - and the Philosopher's Stone",
+      //   author: "J. K. Rowling",
+      //   pages: 223,
+      //   readStatus: "no",
+      // },
+    ];
+
+function saveToLocalStorage() {
+  localStorage.setItem('library', JSON.stringify(myLibrary));
+}
+  
 //DOM
 const bookForm = document.querySelector(".book-form");
 
 // Calling a form when clicking on add book button
 function openNav() {
   document.getElementById("myNav").style.height = "100%";
-  console.log("dsafsa");
 }
 
 function closeNav() {
   document.getElementById("myNav").style.height = "0%";
 }
-
-// where the books will be saved...
-let myLibrary = [
-  {
-    title: "Harry Potter - and the Philosopher's Stone",
-    author: "J. K. Rowling",
-    pages: 223,
-    readStatus: "no",
-  },
-  {
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    pages: 304,
-    readStatus: "yes",
-  },
-];
 
 // book object
 function Book(title, author, pages, readStatus) {
@@ -75,18 +76,19 @@ document.querySelector(".book-form").addEventListener("submit", (e) => {
       pages: pages,
       readStatus: readStatus,
     };
-    console.log(bookToInsert);
+    // console.log(bookToInsert);
 
     let bookExists = myLibrary.some((book) => book.title == bookToInsert.title);
-    console.log(bookExists);
+    // console.log(bookExists);
 
-    if (bookExists == false) {
+    if (bookExists) {
+      alert("It already exists");
+    } else {
       const book = new Book(title, author, pages, readStatus);
       myLibrary.push(book);
       addNewBookUI(book);
       clearFormFields();
-    } else {
-      alert("It already exists");
+      saveToLocalStorage();
     }
   }
 });
@@ -125,12 +127,14 @@ document.querySelector(".main").onclick = (ev) => {
     myLibrary.splice([...card.parentElement.children].indexOf(card), 1);
     //remove DOM of book...
     card.remove();
+    // clear local storage and add new myLibrary to local
+    localStorage.clear();
+    saveToLocalStorage(myLibrary);
   }
 };
 
-// Add a button on each book’s display to change its read status.
-// To facilitate this you will want to create the function that toggles a book’s read status on your Book prototype instance.
 
+// change the read status of the book, it also changes local storage of the book...
 document.querySelector(".main").addEventListener("click", function (e) {
   if (e.target.classList.contains("book_status")) {
     let bookCard = e.target.parentElement.parentElement;
@@ -146,5 +150,7 @@ document.querySelector(".main").addEventListener("click", function (e) {
         [...bookCard.parentElement.children].indexOf(bookCard)
       ].readStatus = "no";
     }
+    localStorage.clear();
+    saveToLocalStorage(myLibrary);
   }
 });
