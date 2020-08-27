@@ -11,7 +11,6 @@ Github-pages link: https://polhek.github.io/Project-Library/
 
 
 # Still to do: 
-  - Firebase/local storage
   - maybe some bugs
   
 # Known bugs: 
